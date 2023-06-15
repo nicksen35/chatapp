@@ -1,0 +1,29 @@
+
+body {
+    background-color: #112438
+}
+.outerdiv {
+    background-color: #081D34;
+    width:15%;
+    height:100vh;
+    overflow-y:hidden;
+    color:white;
+}
+ul {
+    list-style-type:none;
+    text-align:center;
+    padding-right:30%; 
+}
+li {
+    padding-bottom:20%;
+}
+.material-symbols-outlined{
+    font-size:72px;
+}
+.dividers
+{
+    border-bottom:10px solid white;
+    width:50%;
+    margin-bottom:5%;
+    text-align:center;
+}
