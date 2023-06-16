@@ -1,10 +1,29 @@
+$font-family: "Trebuchet MS" ;
+$lighter-blue: #112438;
+$darker-blue: #081D34;
+
+*
+{
+    font-family: $font-family;
+}
+@keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
 
 body {
-    background-color: #112438
+    background-color: $lighter-blue;
 }
 .outerdiv {
-    background-color: #081D34;
-    width:15%;
+    background-color: $darker-blue;
+    width:100%;
     height:100vh;
     overflow-y:hidden;
     color:white;
@@ -13,9 +32,10 @@ ul {
     list-style-type:none;
     text-align:center;
     padding-right:30%; 
+    font-family: $font-family;
 }
 li {
-    padding-bottom:20%;
+    margin-bottom:20%;
 }
 .material-symbols-outlined{
     font-size:72px;
@@ -24,6 +44,107 @@ li {
 {
     border-bottom:10px solid white;
     width:50%;
-    margin-bottom:5%;
-    text-align:center;
+    margin-bottom:10%;
+    margin-left:20%;
+    border-radius:50px;
+}
+#addfriend
+{
+    margin-left:10px;
+}
+#logout
+{
+    margin-left:10px;
+}
+.sidebarlabel
+{
+    margin:0;
+    font-family: $font-family;
+}
+
+.sidebarcontainer:hover
+{
+    font-weight:bolder;
+    cursor:pointer;
+}
+.sidebarcontainerclicked:hover
+{
+    cursor:pointer;
+    font-weight:bolder;
+}
+
+.sidebarcontainerclicked
+{
+    border-right: 10px solid white;
+    border-radius:10px;
+    animation-name:slideIn;
+    animation-duration:.5s;
+}
+.appcontainer{
+    display:flex;
+}
+.sidebarparentcontainer 
+{
+    width:15%;
+}
+.messagesparentcontainer
+{
+    color:white;
+    width:25%;
+    border-left:1px solid black;
+    border-right: 1px solid black;
+}
+.messagelistcontainer
+{
+    background-color: $lighter-blue;
+    height:25vh;
+    padding-top:5%;
+    
+}
+.messagelistcontainer h1
+{
+    font-weight:normal;
+    text-align:left;
+    margin-left:7%;
+    font-size:50px;
+}
+.searchbar, .searchbar::placeholder
+{
+    background-color:$darker-blue;
+    color:grey;
+    border-radius:5px;
+    padding-top:4%;
+    border:none;
+    padding-bottom:4%;
+    padding-left:5%;
+    text-align:left;
+    padding-right:40%;
+    margin-left:7%;
+    margin-bottom:2%;
+}
+.contactlistcontainer
+{
+    position:relative;
+    background-color:$darker-blue;
+    height:72.5vh;
+    font-weight:bold;
+}
+.topportion
+{
+    display:flex;
+    margin-left:20%;
+}
+.time
+{   
+    position: absolute;
+    right:5%;
+}
+.message
+{
+    margin: 0 0 3% 20%;
+
+}
+.messagebox 
+{
+    border:1px solid black;
 }
