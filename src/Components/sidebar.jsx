@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
+import Contacts from "./contacts";
 function SideBar() {
-  const [clickedId, setClickedId] = useState(null);
+  const [clickedId, setClickedId] = useState("contacts");
 
   const handleClick = (id) => {
     setClickedId(id);
@@ -10,6 +10,8 @@ function SideBar() {
   };
 
   const condensedmenu = (
+    <> 
+    <div className="sidebarparentcontainer">
     <div className="outerdiv">
       <ul>
         <li>Logo</li>
@@ -79,6 +81,13 @@ function SideBar() {
         </li>
       </ul>
     </div>
+    </div>
+    {clickedId === "contacts" ? (
+        <Contacts />
+      ) : (
+         ""
+      )}
+    </> 
   );
 
   return condensedmenu;
