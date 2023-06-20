@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Contacts from "./contacts";
+import Logout from './logout'
+import EmailSearch from "./addfriend";
 function SideBar() {
   const [clickedId, setClickedId] = useState("contacts");
-
+  
   const handleClick = (id) => {
     setClickedId(id);
     console.log(id);
@@ -87,6 +89,17 @@ function SideBar() {
       ) : (
          ""
       )}
+    {clickedId === "logoutsidebar" ?(
+      <Logout />
+    ) : (
+      ""
+    )}
+    {clickedId === "addsidebar" ?
+    (
+      <EmailSearch />
+    ): (
+      "" 
+    )}
     </> 
   );
 
