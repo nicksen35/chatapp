@@ -13,7 +13,7 @@ import { signOut } from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import "firebase/firestore";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, query } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyCw8wTLEV9RvPNNHeNR24WNiRxhXPaYmas",
   authDomain: "chat-application-3b73d.firebaseapp.com",
@@ -30,6 +30,7 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = firebase.firestore()
 
+
 export const handleLogout = () => {
   signOut(auth)
     .then(() => {
@@ -40,6 +41,15 @@ export const handleLogout = () => {
     });
 };
 
+const getCurrentUserId = () =>
+{
+  const currentuser = auth.currentUser;
+  if (currentuser)
+  {
+    return currentuser.uid;
+  }
+  return null; 
+}
 const signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider();
@@ -233,10 +243,74 @@ function LoginPage() {
   );
 }
 
+export function FriendRequests()
+{
+  const [senderID, getSenderID] = useState([])
+  const [recieverID, getRecieverID] = useState([])
+  const senderid = getCurrentUserId()
+  const friendrequests = firebase.firestore().collection('friendrequests')
+  useEffect(() => {
+    const fetchUserIds = async () => {
+
+      try {
+        const senderquerySnapshot = await friendrequests.where('senderid', '==', senderid).get();
+        const senderids = senderquerySnapshot.docs.map((doc) => doc.data().senderid);
+        getSenderID(senderids);
+      } catch (error) {
+        console.error('Error retrieving user IDs: ', error);
+      }
+    };
+    const fetchRecieverIds = async () => {
+      try{
+        const recieverquerySnapshot = await friendrequests.where('requestedUser', '==', senderid).get();
+          const recieverids = recieverquerySnapshot.docs.map((doc) => doc.data().requestedUser);
+          getRecieverID(recieverids);
+        }
+      catch (error)
+      {
+        console.error("Error retrieving reciever IDs", error)
+      }
+    }
+
+    fetchUserIds();
+    fetchRecieverIds();
+  }, 
+  []);
+
+
+  return (
+    <div>
+      <h1 className='pendingheader'>User IDs:</h1>
+      <div className='friendreqcardcontainer'>
+        {senderID.map((userId) => (
+          <>
+          <div className='friendreqcard'> 
+          {userId}
+          <button>Cancel Friend Request</button>
+          </div>
+          </>
+        ))}
+      </div> 
+      <h1 className='pendingheader'>Recieved User IDs:</h1> 
+      <div className='friendreqcardcontainer'>
+        {recieverID.map((userId) => (
+          <>
+          <div className='friendreqcard'> 
+          {userId} 
+          <button> Accept </button>
+          <button> Decline </button>
+          </div>
+          </>
+        ))}
+      </div> 
+    </div>
+  );
+};
 export function EmailSearch() {
   
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [requestedUser, setRequestedUser] = useState("");
 
   const handleSearch = async () => {
     try {
@@ -251,19 +325,49 @@ export function EmailSearch() {
       console.error("Error searching emails:", error);
     }
   };
+  const sendFriendRequest = async (user) => {
+    setRequestedUser(user)
+    const senderid = getCurrentUserId()
+    const friendrequests = firebase.firestore().collection('friendrequests')
+    console.log('Current User:', senderid)
+    try
+    {
+      
+      console.log(friendrequests)
+      await friendrequests.add({
+        senderid, 
+        requestedUser,
+        status: 0
+    });
+    console.log("Request Sent Successfully!")
+
+    }
+    catch (error)
+    {
+      console.error("Error Sending Friend Request" + error)
+    }
+  }
 
   return (
     <div className="friendsearchdiv">
+      <div className="friendsearchupper">
       <input
         type="text"
+        placeholder='Add your Friends via Email!'
         className="friendsearchbox"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <button className="friendsearchbutton" onClick={handleSearch}>Search</button>
+      </div>
+      <div className="friendsearchlower">
       {searchResults.map((user) => (
-        <div key={user.id}>{user.email}</div>
+        <div className="userprofile" key={user.uid}>
+          <h1> {user.email}  </h1>
+          <button onClick={() => sendFriendRequest(user.uid)}> Send a Friend Request </button>
+        </div>
       ))}
+      </div>
     </div>
   );
 }

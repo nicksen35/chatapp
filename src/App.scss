@@ -274,8 +274,8 @@ li {
 {
     display:flex;
     column-gap:5%;
-    justify-content:center;
     width:100%;
+    text-align:center;
 }
 .friendbutton
 {
@@ -307,6 +307,120 @@ li {
 }
 .buttonlistdiv
 {
-    border:5px solid white;
+    margin-right:25%;
+}
+.friendlistdiv
+{
+    display:flex;
+    height:10%;
     width:100%;
+}
+.searchingforfriend
+{
+    padding-top:25px;
+}
+.friendbar
+{
+    padding-top:10%;
+    padding-bottom:10%;
+    padding-left:75%;
+    padding-right:75%;
+    text-align:center;
+    background-color:$darker-blue;
+    color:white;
+    border:none;
+    border-radius:7px;
+}
+.friendbuttonclicked
+{
+    white-space:nowrap;
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-left:20px;
+    padding-right:20px;
+    height:100%;
+    text-align:center;
+    background-color:transparent;
+    border:none;
+    opacity: 100%;
+    border-radius:5px;
+    font-size:larger;
+    background-color:$darker-blue;
+    color:white;
+}
+.friendsearchdiv
+{
+}
+.friendsearchbox
+{
+    padding-left:5%;
+    padding-right:50%;
+    padding-top:2%;
+    padding-bottom:2%;
+    border-radius:10px;
+    margin-left:6%;
+    width: 300px; /* Adjust the width value as needed */
+    max-width: 100%; /* Ensures the element doesn't exceed its parent's width */
+}
+.friendsearchbutton
+{
+    border-radius:10px;
+
+}
+.friendsearchbutton:hover
+{
+    background-color:$lighter-blue;
+}
+.friendsearchbox, .friendsearchbutton
+{
+    background-color:$darker-blue;
+    border:0;
+    color:white;
+}
+.addfriendheader
+{
+    color:white;
+    text-align:left;
+    margin-left:55px;
+}
+.userprofile
+{
+    border:1px solid white;
+    color:white;
+    text-align:center;
+}
+.userprofile button
+{
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    background-color:$darker-blue;
+    color:white;
+    border:0;
+}
+.userprofile button:hover
+{
+    background-color:$lighter-blue
+}
+.friendsearchupper
+{
+    display:flex;
+    justify-content: center;
+    padding-top:2%;
+}
+.friendsearchlower
+{
+    margin-top:5%;
+    margin-left:6.5%;
+}
+.pendingheader
+{
+    color:white;
+    margin-left:55px;
+}
+.friendreqcard
+{
+    margin-left:55px;
+    color:white;
 }
