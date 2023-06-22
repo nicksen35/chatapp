@@ -270,3 +270,43 @@ li {
     text-align:center;
     margin-top:2.5%;
 }
+.buttonlist
+{
+    display:flex;
+    column-gap:5%;
+    justify-content:center;
+    width:100%;
+}
+.friendbutton
+{
+    white-space:nowrap;
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-left:20px;
+    padding-right:20px;
+    height:100%;
+    text-align:center;
+    background-color:transparent;
+    color:grey;
+    border:none;
+    opacity: 100%;
+    border-radius:5px;
+    font-size:larger;
+}
+.friendbutton:hover 
+{
+    background-color:$darker-blue;
+    opacity:100%;
+}
+.friendslistheader
+{
+    color:white;
+    margin-left:3%;
+    padding-top:7px;
+    font-size:larger;
+}
+.buttonlistdiv
+{
+    border:5px solid white;
+    width:100%;
+}

@@ -1,4 +1,4 @@
-import { handleLogout } from "../App"
+import { handleLogout } from "../Auth/auth"
 
 function Logout()
 {
