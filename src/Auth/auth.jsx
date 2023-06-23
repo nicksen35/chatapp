@@ -1,7 +1,5 @@
 import '../App.scss'
 import SideBar from "../Components/sidebar";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
@@ -12,8 +10,9 @@ import {
 import { signOut } from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import { doc, setDoc } from "firebase/firestore";
 import "firebase/firestore";
-import { addDoc, collection, query } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyCw8wTLEV9RvPNNHeNR24WNiRxhXPaYmas",
   authDomain: "chat-application-3b73d.firebaseapp.com",
@@ -26,7 +25,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig)
-const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = firebase.firestore()
 
@@ -47,6 +45,15 @@ const getCurrentUserId = () =>
   if (currentuser)
   {
     return currentuser.uid;
+  }
+  return null; 
+}
+const getCurrentEmail = () =>
+{
+  const currentuser = auth.currentUser;
+  if (currentuser)
+  {
+    return currentuser.email;
   }
   return null; 
 }
@@ -242,75 +249,92 @@ function LoginPage() {
     />
   );
 }
-
 export function FriendRequests()
 {
-  const [senderID, getSenderID] = useState([])
-  const [recieverID, getRecieverID] = useState([])
-  const senderid = getCurrentUserId()
-  const friendrequests = firebase.firestore().collection('friendrequests')
+  const [documentData, getDocumentData] = useState([])
+  const [recieverData, getRecieverData] = useState([])
+  const [senderData, getSenderData] = useState([])
+  
+  
+ 
   useEffect(() => {
-    const fetchUserIds = async () => {
-
+    const fetchUserData = async () => {
+      const friendrequests = firebase.firestore().collection('friendrequests')
+      const results = []
+      const sentRequests = [];
+      const receivedRequests = [];
       try {
-        const senderquerySnapshot = await friendrequests.where('senderid', '==', senderid).get();
-        const senderids = senderquerySnapshot.docs.map((doc) => doc.data().senderid);
-        getSenderID(senderids);
+        const friendRequestsQuerySnapshot = await friendrequests.get();
+  
+        friendRequestsQuerySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const values = Object.values(data);
+          const { recieveremail, senderemail, senderid, requestedUser, status } = data;
+          if (values.includes(getCurrentUserId())) {
+            const documentId = doc.id;
+            const mappedData = { documentId, senderid, requestedUser, status, recieveremail, senderemail };
+            if (senderid === getCurrentUserId())
+            {
+              sentRequests.push(mappedData);
+              getSenderData(sentRequests)
+            }
+            else
+            {
+              receivedRequests.push(mappedData)
+              getRecieverData(receivedRequests)
+            }
+            results.push(mappedData);
+            getDocumentData(results)
+          }
+        });
       } catch (error) {
         console.error('Error retrieving user IDs: ', error);
       }
-    };
-    const fetchRecieverIds = async () => {
-      try{
-        const recieverquerySnapshot = await friendrequests.where('requestedUser', '==', senderid).get();
-          const recieverids = recieverquerySnapshot.docs.map((doc) => doc.data().requestedUser);
-          getRecieverID(recieverids);
-        }
-      catch (error)
-      {
-        console.error("Error retrieving reciever IDs", error)
-      }
     }
+    fetchUserData();
+  }, []);
 
-    fetchUserIds();
-    fetchRecieverIds();
-  }, 
-  []);
-
-
+console.log(senderData)
+console.log(recieverData)
   return (
     <div>
-      <h1 className='pendingheader'>User IDs:</h1>
+      <h1 className='pendingheader'>Sent Friend Requests: </h1>
       <div className='friendreqcardcontainer'>
-        {senderID.map((userId) => (
+        {senderData.map((docdata) => (
           <>
+          <div key={docdata.documentId}> 
           <div className='friendreqcard'> 
-          {userId}
-          <button>Cancel Friend Request</button>
+            <p className="friendreqpara"> {docdata.recieveremail} </p> 
+          <button className='cancelfriendreq'>Cancel Friend Request</button>
+          </div>
           </div>
           </>
         ))}
       </div> 
-      <h1 className='pendingheader'>Recieved User IDs:</h1> 
-      <div className='friendreqcardcontainer'>
-        {recieverID.map((userId) => (
-          <>
-          <div className='friendreqcard'> 
-          {userId} 
-          <button> Accept </button>
-          <button> Decline </button>
+      <h1 className='pendingheader'>Recieved Friend Requests: </h1> 
+          <div > 
+          {recieverData.map((docdata) => (
+            <>
+            <div key={docdata.documentId} className='friendreqcard'>
+            <p className="friendreqpara"> {docdata.senderemail}</p>
+            <div className='friendreqbuttoncontainer'>
+            <button className="acceptfriendreq"> Accept </button>
+            <button className='declinefriendreq'> Decline </button>
+            </div>
+            </div>
+            </>
+          ))}
           </div>
-          </>
-        ))}
+          
       </div> 
-    </div>
+
   );
 };
 export function EmailSearch() {
   
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [requestedUser, setRequestedUser] = useState("");
+  const [data, getData] = useState({})
 
   const handleSearch = async () => {
     try {
@@ -325,20 +349,76 @@ export function EmailSearch() {
       console.error("Error searching emails:", error);
     }
   };
-  const sendFriendRequest = async (user) => {
-    setRequestedUser(user)
-    const senderid = getCurrentUserId()
-    const friendrequests = firebase.firestore().collection('friendrequests')
-    console.log('Current User:', senderid)
+
+  const handleFriendRequests = async(documentid, state) =>
+  {
     try
     {
-      
+      const docref = doc(db, "friendrequests", documentid)
+      if (state === "accepted")
+      {
+        const data = {
+          status:"accepted"
+        }
+        getData(data)
+      }
+      else if (state === "rejected")
+      {
+        const data = {
+          status:"rejected"
+        }
+        getData(data)
+      }
+      else if (state === "cancelled")
+      {
+        const data = 
+        {
+          status:"cancelled"
+        }
+        getData(data)
+      }
+      setDoc(docref, data, {merge:true})
+      .then(docref => {
+        console.log("Document has been updated accordingly")
+      })
+    } catch(error)
+    {
+      console.log(error)
+    }
+  } 
+  const sendFriendRequest = async (user, email) => {
+    const senderid = getCurrentUserId()
+    const senderemail = getCurrentEmail()
+    const friendrequests = firebase.firestore().collection('friendrequests')
+    console.log('Current User:', senderid)
+
+    try
+    {
+      const existingRequest = await friendrequests
+      .where('senderid', '==', senderid)
+      .where('requestedUser', '==', user)
+      .where('senderemail', '==',  senderemail)
+      .where('recieveremail', '==', email)
+      .get();
+      if (!existingRequest.empty) {
+        console.log('Friend request already sent to this user.');
+        return;
+      }
+      else if (senderid === user)
+      {
+        console.log('Friend request cannot be sent to this user. It is yourself.');
+        return;
+      }
       console.log(friendrequests)
       await friendrequests.add({
         senderid, 
-        requestedUser,
-        status: 0
+        requestedUser: user,
+        senderemail,
+        recieveremail: email,
+        status: 'pending'
+      
     });
+    
     console.log("Request Sent Successfully!")
 
     }
@@ -363,8 +443,8 @@ export function EmailSearch() {
       <div className="friendsearchlower">
       {searchResults.map((user) => (
         <div className="userprofile" key={user.uid}>
-          <h1> {user.email}  </h1>
-          <button onClick={() => sendFriendRequest(user.uid)}> Send a Friend Request </button>
+          <h1> {user.email} {user.uid} </h1>
+          <button onClick={() => sendFriendRequest(user.uid, user.email)}> Send a Friend Request </button>
         </div>
       ))}
       </div>
@@ -377,18 +457,18 @@ export function Homepage()
     const [user, setUser] = useState(null);
     console.log(user)
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User is signed in
-            setUser(user);
+          // User is signed in
+          setUser(user);
         } else {
-            // User is signed out
-            setUser(null);
+          // User is signed out
+          setUser(null);
         }
-        });
-
-        // Clean up the subscription when the component unmounts
-        return () => unsubscribe();
+      });
+    
+      // Clean up the subscription when the component unmounts
+      return () => unsubscribe();
     }, []);
     const Application = (
         <div className="appcontainer">

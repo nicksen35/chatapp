@@ -423,4 +423,30 @@ li {
 {
     margin-left:55px;
     color:white;
+    border:1px solid white;
+    width:50%;
+    text-align:center;
+    padding-bottom:2%;
+}
+.cancelfriendreq
+{
+    padding-left:5%;
+    padding-right:5%;
+    padding-top:2.5%;
+    padding-bottom:2.5%;
+    background-color: $darker-blue;
+    color:white;
+    border:none;
+}
+.acceptfriendreq, .declinefriendreq
+{
+    padding-left:5%;
+    padding-right:5%;
+    padding-top:2.5%;
+    padding-bottom:2.5%;
+    background-color: $darker-blue;
+    color:white;
+    border:none;
+    margin-right:2.5%;
+    margin-left:2.5%
 }
