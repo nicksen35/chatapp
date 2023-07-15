@@ -450,3 +450,111 @@ li {
     margin-right:2.5%;
     margin-left:2.5%
 }
+.friendreqcardhidden
+{
+    display:none;
+}
+.friendbox
+{
+    color:white;
+    margin-left:2.5%;
+    border:2px solid white;
+    display:flex;
+}
+.messageiconbuttoncontainer
+{
+    margin-top:5%;
+    margin-left:5%;
+}
+.messageiconbox
+{
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    background-color:$darker-blue;
+    color:white;
+    border:0;
+    width:100%;
+}
+.textcontainer
+{
+    margin-left:5%;
+}
+.chatheader
+{
+    border:1px solid white;
+    width:120vh;
+    color:white;
+    height:10vh;
+    text-align:center;
+    
+}
+.chatcontainer
+{
+    height:80vh;
+    display:block;
+}
+.messageboxcontainer
+{
+    position:absolute;
+    bottom:0%;
+    right:0%;
+    border-top:1px solid black;
+    border-left:1px solid black;
+    width:62.5%;
+    height:20vh;
+    background-color: $darker-blue;
+}
+.messageinputbox
+{
+    margin-left:5%;
+    margin-top:4.5%;
+    border-radius:50px;
+    padding-left:5%;
+    padding-right:15%;
+    padding-bottom:2.5%;
+    padding-top:2.5%;
+    color:white;
+    background-color: $lighter-blue;
+    border:none;
+    text-align:left;
+    font-size:20px;
+    width:70%;
+
+    
+}
+.messageinputbox::placeholder
+{
+    color:white;
+    
+}
+.messages
+{
+    margin-bottom:5%;
+    margin-left:10%;
+    height:fit-content;
+    width:fit-content;
+    display:block;
+    margin-bottom:2%;
+    p
+    {
+       
+        width:100%;
+        
+        color:white;
+    }
+    
+}
+#messagesender
+{
+    font-weight:bold;
+}
+
+.messagescontainer
+{
+    height:85%;
+    overflow-y:scroll;
+    scroll-snap-type: y proximity;
+    overscroll-behavior-y: contain;
+}

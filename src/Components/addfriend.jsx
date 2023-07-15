@@ -1,6 +1,5 @@
-import { EmailSearch } from "../Auth/auth";
+import { EmailSearch, FriendRequests, FriendsList } from "../Auth/auth";
 import { useState } from "react";
-import { FriendRequests } from "../Auth/auth";
 function AddFriend() {
   const [clickedId, setClickedId] = useState("activebutton");
   const handleClick = (id) => {
@@ -104,6 +103,15 @@ function AddFriend() {
       (
         ""
       )}
+      {clickedId === "allbutton" ? (
+        <>
+        <FriendsList /> 
+        </>
+      ):
+      (
+        ""
+      )
+      }
     </div>
     </>
   );
